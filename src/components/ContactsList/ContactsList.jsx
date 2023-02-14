@@ -1,7 +1,6 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { getContacts, getFilterValue } from 'redux/selectors';
-import { Item, DeleteButton } from './ContactsList.styled';
-import { deleteContact } from 'redux/operations';
+import { useSelector } from 'react-redux';
+import { WrapperContacts } from './ContactsList.styled';
+import { ContactsListItem } from 'components/ContactsListItem/ContactsListItem';
 
 const getFilteredContacts = (contacts, filterValue) => {
   return contacts.filter(contact =>
@@ -9,19 +8,15 @@ const getFilteredContacts = (contacts, filterValue) => {
   );
 };
 
-export const ContactsList = () => {
-  const contacts = useSelector(getContacts);
-  const filterValue = useSelector(getFilterValue);
+export const ContactsList = ({ contacts = [] }) => {
+  const filterValue = useSelector(state => state.filter.value);
   const filteredContacts = getFilteredContacts(contacts, filterValue);
 
-  const dispatch = useDispatch();
-
-  return filteredContacts.map(({ id, name, phone }) => (
-    <Item key={id}>
-      {name}: {phone}
-      <DeleteButton type="button" onClick={() => dispatch(deleteContact(id))}>
-        Delete
-      </DeleteButton>
-    </Item>
-  ));
+  return (
+    <WrapperContacts>
+      {filteredContacts.map(contacts => (
+        <ContactsListItem key={contacts.id} contacts={contacts} />
+      ))}
+    </WrapperContacts>
+  );
 };

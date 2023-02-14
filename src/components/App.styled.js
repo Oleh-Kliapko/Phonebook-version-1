@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { theme } from '../utils/theme';
 
-export const WrapperPhonebook = styled.section`
+export const Phonebook = styled.section`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -20,9 +20,4 @@ export const TitleContacts = styled.h2`
   padding-bottom: ${theme.space.secondary * 2}px;
   margin: 0;
   color: ${theme.colors.main};
-`;
-
-export const WrapperContacts = styled.ul`
-  margin: 0;
-  padding: 0;
 `;

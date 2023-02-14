@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { theme } from '../../utils/theme';
 
-export const FormWrapper = styled.form`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: ${theme.space.secondary}px;
@@ -24,7 +24,7 @@ export const Label = styled.label`
   line-height: 1.8;
 `;
 
-export const Button = styled.input`
+export const Button = styled.button`
   font-size: ${theme.typography.title};
   width: 200px;
   padding: ${theme.space.secondary}px;

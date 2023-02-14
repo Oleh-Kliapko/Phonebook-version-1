@@ -1,45 +1,25 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
-import {
-  WrapperPhonebook,
-  WrapperContacts,
-  Title,
-  TitleContacts,
-} from './App.styled';
+import { Phonebook, Title, TitleContacts } from './App.styled';
 import { ContactForm } from './ContactForm';
 import { ContactsList } from './ContactsList';
 import { Filter } from './Filter';
-import { fetchContacts } from 'redux/operations';
-import { getIsLoading, getError } from 'redux/selectors';
+import { useFetchContactsQuery } from 'redux/contactSlice';
 import { Loader, Error } from 'utils';
 
 export const App = () => {
-  const isLoading = useSelector(getIsLoading);
-  const error = useSelector(getError);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
+  const { data, error, isLoading } = useFetchContactsQuery();
 
   return (
     <>
-      <WrapperPhonebook>
+      <Phonebook>
         <Title>Phonebook</Title>
         <ContactForm />
-        {!isLoading && !error && (
-          <>
-            <TitleContacts>Contacts</TitleContacts>
-            <Filter />
-          </>
-        )}
+        <TitleContacts>Contacts</TitleContacts>
+        <Filter />
         {isLoading && !error && <Loader />}
         {error && !isLoading && <Error />}
-        <WrapperContacts>
-          <ContactsList />
-        </WrapperContacts>
-      </WrapperPhonebook>
+        <ContactsList contacts={data} />
+      </Phonebook>
       <ToastContainer autoClose={3000} />
     </>
   );

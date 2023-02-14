@@ -1,18 +1,13 @@
 import { useForm } from 'react-hook-form';
-import { useSelector, useDispatch } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {
-  FormWrapper,
-  Input,
-  Button,
-  Label,
-  ErrorInput,
-} from './ContactForm.styled';
+import { Form, Input, Button, Label, ErrorInput } from './ContactForm.styled';
 import { patternName, patternNumber, errorName, errorNumber } from 'utils';
-import { addContact } from 'redux/operations';
-import { getContacts } from 'redux/selectors';
-import { Notification } from 'utils';
+import {
+  useFetchContactsQuery,
+  useAddContactsMutation,
+} from 'redux/contactSlice';
+import { Notification, LoaderSave } from 'utils';
 
 export const ContactForm = () => {
   const schema = yup
@@ -26,10 +21,10 @@ export const ContactForm = () => {
     resolver: yupResolver(schema),
   });
 
-  const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const { data: contacts } = useFetchContactsQuery();
+  const [addContact, { isLoading }] = useAddContactsMutation();
 
-  const onFormSubmit = ({ name, phone }) => {
+  const onFormSubmit = async ({ name, phone }) => {
     const isFindName = contacts.find(state => state.name === name);
     if (isFindName) {
       Notification(name);
@@ -37,12 +32,12 @@ export const ContactForm = () => {
       return;
     }
 
-    dispatch(addContact({ name, phone }));
+    await addContact({ name, phone });
     reset();
   };
 
   return (
-    <FormWrapper onSubmit={handleSubmit(onFormSubmit)}>
+    <Form onSubmit={handleSubmit(onFormSubmit)}>
       <Label htmlFor="name">
         Name
         <Input
@@ -57,7 +52,10 @@ export const ContactForm = () => {
         />
         {formState.errors.phone && <ErrorInput>{errorNumber}</ErrorInput>}
       </Label>
-      <Button type="submit" />
-    </FormWrapper>
+      <Button type="submit" disabled={isLoading}>
+        {isLoading && <LoaderSave />}
+        {!isLoading && 'Save contact'}
+      </Button>
+    </Form>
   );
 };
