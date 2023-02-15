@@ -1,15 +1,10 @@
 import { useSelector } from 'react-redux';
 import { WrapperContacts } from './ContactsList.styled';
 import { ContactsListItem } from 'components/ContactsListItem/ContactsListItem';
-
-const getFilteredContacts = (contacts, filterValue) => {
-  return contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filterValue)
-  );
-};
+import { selectFilter, getFilteredContacts } from 'redux/selectors';
 
 export const ContactsList = ({ contacts = [] }) => {
-  const filterValue = useSelector(state => state.filter.value);
+  const filterValue = useSelector(selectFilter);
   const filteredContacts = getFilteredContacts(contacts, filterValue);
 
   return (
